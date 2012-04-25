@@ -36,7 +36,6 @@ from splashUi import Ui_Splash
 from demofile import demoFile
 import elementtree.ElementTree as ET
 import xml.etree.ElementTree as xml
-import bz2
 
 class Splash(QtGui.QDialog):
         
@@ -48,38 +47,37 @@ class Splash(QtGui.QDialog):
         self.splashui=Ui_Splash()
         self.splashui.setupUi(self)
         
-        self.version = "1.0"
+        self.version = "2.0"
         self.programname = "Steam Tools"
-        self.downloadpage = "http://code.google.com/p/steam-tools/downloads/list"
         
         self.splashui.msg.stackUnder(self.splashui.title)
         self.splashui.bg.stackUnder(self.splashui.msg)
         
-        
     def UpdateCheck(self):
         self.splashui.msg.setText("Getting URLs...")
-        url = "http://stunjelly.com/klutchupdate.xml"
+        url = "http://steam-tools.googlecode.com/svn/version/current.xml"
         self.splashui.msg.setText("Reading Updates...")
-        currentversion = urllib.urlopen(url).read()
+        updatexml = xml.parse(urllib.urlopen(url))
+        currentversion = updatexml.findall("update")
+
+        for item in currentversion:
+            latestversion = item.findtext('version')
+            latestlink = item.findtext('link')
         
-        print "Current Version: " + self.version
-        print "Latest Version: " + currentversion
-        
-        if currentversion > self.version:
+        if latestversion > self.version:
             self.splashui.msg.setText("This version is out of date.")
             response = QtGui.QMessageBox.question(self
                 , "New Update Available"
-                , currentversion + " has been released!\nDo you wish to visit the download page now?"
+                , self.programname + " v" + latestversion + " has been released!\nDo you wish to visit the download page now?"
                 , QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
             if response == QtGui.QMessageBox.Yes:
                 print "Open Download Page"
-                webbrowser.open_new_tab(self.kgui.downloadpage)
+                webbrowser.open_new_tab(str(latestlink))
             else:
                 print "Open Download Page"
                 
         else:
             self.splashui.msg.setText("You have the latest update installed.")
-        
         self.splashui.msg.setText("Loading main application...")
             
 class Main(QtGui.QMainWindow):
