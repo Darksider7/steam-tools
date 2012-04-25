@@ -544,6 +544,9 @@ p, li { white-space: pre-wrap; }
         <string>http://fusionmods.net/affiliates/SteelSeries_GIF_468x60.gif</string>
        </url>
       </property>
+      <property name="renderHints">
+       <set>QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
+      </property>
      </widget>
      <widget class="QPushButton" name="btn_feedback">
       <property name="enabled">
@@ -1970,6 +1973,9 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="statusTip">
      <string>Choose the game you want to edit from this drop down menu</string>
+    </property>
+    <property name="editable">
+     <bool>false</bool>
     </property>
     <property name="frame">
      <bool>true</bool>
